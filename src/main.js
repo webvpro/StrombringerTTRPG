@@ -1,9 +1,12 @@
 import { createApp } from 'vue'
 import firebase from 'firebase'
+import VueFriendlyIframe from 'vue-friendly-iframe';
+
 import './tailwind.css'
 import App from './App.vue'
 import { routes } from './routes.js'
 import { createRouter, createWebHistory } from 'vue-router'
+
 
 /* code from our Firebase console */
 var firebaseConfig ={
@@ -26,5 +29,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+app.component('vue-friendly-iframe', VueFriendlyIframe.VueFriendlyIframe)
 app.use(router)
 app.mount('#app')

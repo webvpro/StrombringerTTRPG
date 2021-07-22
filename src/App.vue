@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="h-screen w-screen overflow-hidden">
     <header class="bg-indigo-900 shadow" v-if="$route.meta.title">
       <page-header />
     </header>
-    <main>
+    <div class="h-full w-full">
       <router-view/>
-    </main>
+    </div>
   </div>
 </template>
 

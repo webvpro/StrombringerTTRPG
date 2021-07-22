@@ -75,10 +75,10 @@ OhVueIcon.add(GiMagicPortal, GiWomanElfFace);
 
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Dashboard', href: '/overlay', current: true },
   { name: 'Team', href: '#', current: false },
   { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Events', href: '#', current: false },
 ]
 
 export default {
