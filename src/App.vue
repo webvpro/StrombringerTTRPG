@@ -3,7 +3,7 @@
     <header class="bg-indigo-900 shadow" v-if="$route.meta.title">
       <PageHeader user={false} />
     </header>
-    <div class="flex-grow bg-red-700 flex flex-col">
+    <div class="flex-grow flex flex-col">
       <router-view/>
     </div>
   </div>

@@ -5,8 +5,6 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
 import  { GiMagicPortal, GiCapeArmor  } from "oh-vue-icons/icons";
 import DemoProfileImg from '@/components/DemoProfileImg.vue'
-import demoImgUrl from '../assets/ppp-profile.png'
-import ButtonRepo from '@/components/ButtonRepo.vue'
 OhVueIcon.add(GiMagicPortal, GiCapeArmor );
 
 
@@ -18,6 +16,13 @@ export default {
 
       return { enabled }
     },
+    methods: {
+      openPortal() {
+        this.windowRef = window.open(`${window.location.origin}/liveoverlay`, "", "width=600,height=400,left=200,top=200");
+        this.windowRef.addEventListener('beforeunload', this.closePortal);
+        this.windowRef.document.body.appendChild(this.$el);
+    },
+    }
   }
 </script>
 
@@ -42,7 +47,7 @@ export default {
           </div>
           <div id="overlay-controls">
             <div class="control-panel justify-items-center items-center">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded self-center">
+                <button on @click="openPortal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded self-center">
                   Open Live Overlay
                 </button>
             </div>  
