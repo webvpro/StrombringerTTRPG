@@ -1,9 +1,9 @@
 <template>
-  <div class="h-screen w-screen overflow-hidden">
+  <div class="h-full w-full flex flex-col flex-nowrap flex-grow">
     <header class="bg-indigo-900 shadow" v-if="$route.meta.title">
-      <page-header />
+      <PageHeader user={false} />
     </header>
-    <div class="h-full w-full">
+    <div class="flex-grow bg-red-700 flex flex-col">
       <router-view/>
     </div>
   </div>
@@ -17,7 +17,7 @@ import PageHeader from '@/components/PageHeader.vue';
 
 export default defineComponent({
   components: {
-    "page-header": PageHeader
+    PageHeader
   },
 })
 </script>
