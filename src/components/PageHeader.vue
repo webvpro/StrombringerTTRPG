@@ -44,7 +44,7 @@
                 <MenuItem v-slot="{ active }">
                   <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
                 </MenuItem>
-                <MenuItem v-slot="{ active }" v-if="$props.user">
+                <MenuItem v-slot="{ active }" v-if="user">
                   <a href="#" @click.prevent="logout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" v-else>
@@ -100,23 +100,25 @@ export default {
   setup() {
     const open = ref(false)
     const router = useRouter();
-
+    const user = ref(false)
     const logout = () => {
       firebase.auth()
       .signOut()
       .then( () => {
         console.log('logged out')
-        router.push('/login')
       })
       .catch(err => console.log(err.message))
+      router.push('/login')
     }
-
+    onBeforeMount( () => {
+      user.value = firebase.auth().currentUser;
+    })
     return {
       navigation,
       open,
-      logout
+      logout,
+      user,
     }
   },
-  props: ["user"],
 }
 </script>
