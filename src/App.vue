@@ -24,6 +24,8 @@ export default {
     const router = useRouter();
     const route = useRoute();
     const user = ref(true)
+
+
     onBeforeMount(()=>{
       firebase.auth().onAuthStateChanged((user) => {
         user.value = user

@@ -45,7 +45,7 @@
                   <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" v-if="$props.user">
-                  <a href="/logout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
+                  <a href="#" @click="logout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" v-else>
                   <a href="/login" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign In</a>
@@ -66,8 +66,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import firebase from 'firebase'
+import { useRouter } from 'vue-router' // import router
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
@@ -98,11 +99,22 @@ export default {
   },
   setup() {
     const open = ref(false)
-    
+    const router = useRouter();
+
+    const logout = () => {
+      firebase.auth()
+      .signOut()
+      .then( () => {
+        console.log('logged out')
+        router.push('/login')
+      })
+      .catch(err => console.log(err.message))
+    }
 
     return {
       navigation,
       open,
+      logout
     }
   },
   props: ["user"],
