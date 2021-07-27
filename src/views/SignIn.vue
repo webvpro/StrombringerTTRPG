@@ -10,22 +10,21 @@
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or
-          {{ ' ' }}
-          <a href="#" class="font-medium text-purple-600 hover:text-purple-500">
-            start your 14-day free trial
+          <a href="/signup" class="font-medium text-purple-600 hover:text-purple-500">
+            Create a new free account
           </a>
         </p>
       </div>
-      <form class="mt-8 space-y-6" action="#" method="POST">
+      <form class="mt-8 space-y-6" @submit.prevent="login">
         <input type="hidden" name="remember" value="true" />
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
             <label for="email-address" class="sr-only">Email address</label>
-            <input id="email-address" name="email" type="email" autocomplete="email" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" />
+            <input id="email-address" name="email" type="email" autocomplete="email" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" v-model='email'/>
           </div>
           <div>
             <label for="password" class="sr-only">Password</label>
-            <input id="password" name="password" type="password" autocomplete="current-password" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password" />
+            <input id="password" name="password" type="password" autocomplete="current-password" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password" v-model='password'/>
           </div>
         </div>
 
@@ -58,6 +57,9 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+import firebase from 'firebase'
+import { useRouter } from 'vue-router' // import router
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
 import  { GiMagicPortal, GiWomanElfFace } from "oh-vue-icons/icons";
@@ -68,5 +70,28 @@ export default {
     LockClosedIcon,
     "v-icon": OhVueIcon,
   },
+  setup () {
+    const email = ref('')
+    const password = ref('')
+    const router = useRouter() 
+    const login = () => {
+      firebase
+        .auth() // get the auth api
+        .signInWithEmailAndPassword(email.value, password.value) 
+        .then((data) => {
+          console.log('LoggedIn!');
+          router.push('/')
+        })
+        .catch(error => {
+          console.log(error.message)
+        });
+    }
+
+    return {
+      login,
+      email,
+      password,
+    }
+  }
 }
 </script>

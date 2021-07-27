@@ -15,7 +15,7 @@ export default defineComponent({
         <h2
           class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
         >
-          Ready to dive in?
+          
           <br />
           <span class="text-indigo-600">Vite 2.x + Vue 3.x + Tailwind 2.x</span>
         </h2>

@@ -67,6 +67,7 @@
 
 <script>
 import { ref } from 'vue'
+import firebase from 'firebase'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
@@ -75,9 +76,9 @@ OhVueIcon.add(GiMagicPortal, GiWomanElfFace);
 
 
 const navigation = [
-  { name: 'Dashboard', href: '/overlay', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
+  { name: 'Ovelays', href: '/overlay', current: true },
+  { name: 'Groups', href: '#', current: false },
+  { name: 'Work', href: '#', current: false },
   { name: 'Events', href: '#', current: false },
 ]
 
@@ -97,6 +98,7 @@ export default {
   },
   setup() {
     const open = ref(false)
+    
 
     return {
       navigation,

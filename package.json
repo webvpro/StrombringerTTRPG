@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "serve": "vite preview"
+    "build:watch": "vite build --watch",
+    "serve:firebase": "firebase serve",
+    "watch": "run-p build:watch serve:firebase"
   },
   "dependencies": {
     "@xstate/vue": "^0.8.0",
@@ -28,6 +30,7 @@
     "@vitejs/plugin-vue": "^1.2.5",
     "@vue/compiler-sfc": "^3.2.0-beta.2",
     "autoprefixer": "^10.3.1",
+    "npm-run-all": "^4.1.5",
     "tailwindcss": "^2.2.4",
     "vite": "^2.4.3",
     "vue-friendly-iframe": "^0.20.0"

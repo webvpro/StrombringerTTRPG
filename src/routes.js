@@ -4,12 +4,17 @@ import NotFound from './views/NotFound.vue'
 import SignIn from './views/SignIn.vue'
 import Overlay from './views/Overlay.vue'
 import LiveOverlay from './views/LiveOverlay.vue'
+import Profile from './views/Profile.vue'
+import SignUp from './views/SignUp.vue'
 
 /** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
   { path: '/', component: Home, meta: { title: 'Home' } },
-  { path: '/overlay', component: Overlay, meta: { title: 'Overlays' } },
-  { path: '/liveoverlay', component: LiveOverlay },
+  { path: '/overlay', component: Overlay, meta: { title: 'Overlays', secure: true } },
+  { path: '/play', component: Overlay, meta: { title: 'Play', secure: true } },
+  { path: '/liveoverlay', component: LiveOverlay, meta: { secure: true } },
+  { path: '/profile', component: Profile, meta: { title: 'Profile', secure: true } },
+  { path: '/signup', component: SignUp, meta: { title: 'Sign Up' } },
   {
     path: '/about',
     meta: { title: 'About' },
@@ -19,6 +24,6 @@ export const routes = [
     // which is lazy-loaded when the route is visited.
     // component: () => import('./views/About.vue')
   },
-  { path: '/login', component: SignIn },
-  { path: '/:path(.*)', component: NotFound },
+  { path: '/login', component: SignIn, meta: { title: 'Sign In' }  },
+  { path: '/:path(.*)', component: NotFound, meta: { title: 'Not Found' }  },
 ]
