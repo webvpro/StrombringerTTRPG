@@ -17,6 +17,9 @@
       </div>
       <form class="mt-8 space-y-6" @submit.prevent="login">
         <input type="hidden" name="remember" value="true" />
+        <span v-if="message" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+              {{message}}
+        </span>
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
             <label for="email-address" class="sr-only">Email address</label>
@@ -59,7 +62,7 @@
 <script>
 import { ref } from 'vue'
 import firebase from 'firebase'
-import { useRouter } from 'vue-router' // import router
+import { useRouter, useRoute } from 'vue-router' // import router
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
 import  { GiMagicPortal, GiWomanElfFace } from "oh-vue-icons/icons";
@@ -73,17 +76,22 @@ export default {
   setup () {
     const email = ref('')
     const password = ref('')
+    const message = ref(false)
     const router = useRouter() 
+    const route = useRoute();
+
+    console.log(route.params.returnPath);
     const login = () => {
       firebase
         .auth() // get the auth api
         .signInWithEmailAndPassword(email.value, password.value) 
         .then((data) => {
           console.log('LoggedIn!');
-          router.push('/')
+          router.push(route.params.returnPath)
         })
         .catch(error => {
-          console.log(error.message)
+          console.log(error.message);
+          message.value = error.message;
         });
     }
 
@@ -91,6 +99,7 @@ export default {
       login,
       email,
       password,
+      message,
     }
   }
 }
