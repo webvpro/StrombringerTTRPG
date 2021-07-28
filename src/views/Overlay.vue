@@ -13,15 +13,14 @@ export default {
 
     setup() {
       const enabled = ref(false)
+      const liveWindow =ref(false)
+      const openPortal = () => {
+        liveWindow = window.open(`${window.location.origin}/liveoverlay`, "LiveOverlay", "width=600,height=400,left=200,top=200");
+        
+    }
 
-      return { enabled }
-    },
-    methods: {
-      openPortal() {
-        this.windowRef = window.open(`${window.location.origin}/liveoverlay`, "", "width=600,height=400,left=200,top=200");
-        this.windowRef.addEventListener('beforeunload', this.closePortal);
-        this.windowRef.document.body.appendChild(this.$el);
-    },
+      return { enabled, openPortal }
+    
     }
   }
 </script>
@@ -47,7 +46,7 @@ export default {
           </div>
           <div id="overlay-controls">
             <div class="control-panel justify-items-center items-center">
-                <button on @click="openPortal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded self-center">
+                <button on @click.prevent="openPortal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded self-center">
                   Open Live Overlay
                 </button>
             </div>  

@@ -44,7 +44,7 @@
                 <MenuItem v-slot="{ active }">
                   <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
                 </MenuItem>
-                <MenuItem v-slot="{ active }" v-if="user">
+                <MenuItem v-slot="{ active }" v-if={user}>
                   <a href="#" @click.prevent="logout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" v-else>
