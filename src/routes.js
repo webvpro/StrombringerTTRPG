@@ -7,7 +7,6 @@ import LiveOverlay from './views/LiveOverlay.vue'
 import Profile from './views/Profile.vue'
 import SignUp from './views/SignUp.vue'
 
-/** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
   { path: '/', component: Home, meta: { title: 'Home' } },
   { path: '/overlay', component: Overlay, meta: { title: 'Overlays', secure: true } },
@@ -24,6 +23,6 @@ export const routes = [
     // which is lazy-loaded when the route is visited.
     // component: () => import('./views/About.vue')
   },
-  { name: 'login', path: '/login', component: SignIn, meta: { title: 'Sign In' }  },
+  { name: 'login', path: '/login',  component: () => import('./views/SignIn.vue'), meta: { title: 'Sign In' }  },
   { path: '/:path(.*)', component: NotFound, meta: { title: 'Not Found' }  },
 ]

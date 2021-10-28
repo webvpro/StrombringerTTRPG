@@ -61,13 +61,13 @@
 
 <script>
 import { ref } from 'vue'
-import firebase from 'firebase'
+import useFirebase from '@/stores/firebase'
+ 
 import { useRouter, useRoute } from 'vue-router' // import router
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
 import  { GiMagicPortal, GiWomanElfFace } from "oh-vue-icons/icons";
 OhVueIcon.add(GiMagicPortal, GiWomanElfFace);
-
 export default {
   components: {
     LockClosedIcon,
@@ -79,20 +79,10 @@ export default {
     const message = ref(false)
     const router = useRouter() 
     const route = useRoute();
-
+    const { auth, firebase } = useFirebase()
     console.log(route.params.returnPath);
     const login = () => {
-      firebase
-        .auth() // get the auth api
-        .signInWithEmailAndPassword(email.value, password.value) 
-        .then((data) => {
-          console.log('LoggedIn!');
-          router.push(route.params.returnPath)
-        })
-        .catch(error => {
-          console.log(error.message);
-          message.value = error.message;
-        });
+      console.log('login')
     }
 
     return {
@@ -100,6 +90,8 @@ export default {
       email,
       password,
       message,
+      firebase,
+      useFirebase
     }
   }
 }

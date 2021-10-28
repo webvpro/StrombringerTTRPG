@@ -4,16 +4,16 @@ import { Switch } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
 import  { GiMagicPortal, GiCapeArmor  } from "oh-vue-icons/icons";
-import DemoProfileImg from '@/components/DemoProfileImg.vue'
+//import DemoProfileImg from '@/components/DemoProfileImg.vue'
 OhVueIcon.add(GiMagicPortal, GiCapeArmor );
 
 
 export default {
-    components: { Switch, DemoProfileImg,  "v-icon": OhVueIcon  },
+    components: { Switch,   "v-icon": OhVueIcon  },
 
     setup() {
       const enabled = ref(false)
-      const liveWindow =ref(false)
+      let liveWindow =ref(false)
       const openPortal = () => {
         liveWindow = window.open(`${window.location.origin}/liveoverlay`, "LiveOverlay", "width=600,height=400,left=200,top=200");
         

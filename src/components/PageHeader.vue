@@ -1,4 +1,3 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -38,17 +37,17 @@
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <MenuItem v-slot="{ active }">
-                  <a href="" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Profile</a>
+                <MenuItem v-slot="{ active }" v-if="user">
+                  <a href="/profile" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Profile</a>
                 </MenuItem>
-                <MenuItem v-slot="{ active }">
+                <MenuItem v-slot="{ active }" v-if="user">
                   <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
                 </MenuItem>
-                <MenuItem v-slot="{ active }" v-if="$props.isLoggedIn">
-                  <a href="#" @click.prevent="logout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
+                <MenuItem v-slot="{ active }" v-if="user">
+                  <a href="#" @click.prevent="signOut" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
                 </MenuItem>
-                <MenuItem v-slot="{ active }" v-else>
-                  <a href="/login" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign In</a>
+                <MenuItem v-slot="{ active }" v-if="!user">
+                  <a href="#" @click.prevent="signInWithGoogle" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign In</a>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -66,15 +65,10 @@
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
-import firebase from 'firebase'
-import { useRouter } from 'vue-router' // import router
+import { useAuth } from '@/stores/firebase'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
-import  { GiMagicPortal, GiWomanElfFace } from "oh-vue-icons/icons";
-OhVueIcon.add(GiMagicPortal, GiWomanElfFace);
-
 
 const navigation = [
   { name: 'Ovelays', href: '/overlay', current: true },
@@ -98,23 +92,12 @@ export default {
      "v-icon": OhVueIcon
   },
   setup(props) {
-    const open = ref(false)
-    const router = useRouter();
-    const logout = () => {
-      firebase.auth()
-      .signOut()
-      .then( () => {
-        console.log('logged out')
-      })
-      .catch(err => console.log(err.message))
-      router.push('/login')
-    }
+   const { signInWithGoogle, signOut, user } = useAuth()
     return {
-      navigation,
-      open,
-      logout,
+      signInWithGoogle,
+      signOut,
+      user
     }
-  },
-   props: ["isLoggedIn"],
+  }
 }
 </script>
