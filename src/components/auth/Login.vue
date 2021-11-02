@@ -15,7 +15,12 @@
           </a>
         </p>
       </div>
-      <form class="mt-8 space-y-6" @submit.prevent="login">
+      <div>
+        <button class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="googleSignIn">
+          Login with Google
+        </button>
+      </div>
+      <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <input type="hidden" name="remember" value="true" />
         <span v-if="message" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
               {{message}}
@@ -60,35 +65,47 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import useFirebase from '@/stores/firebase'
- 
-import { useRouter, useRoute } from 'vue-router' // import router
-import { LockClosedIcon } from '@heroicons/vue/solid'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { 
+        getAuth,
+        signInWithEmailAndPassword,
+        GoogleAuthProvider,
+        signInWithRedirect, 
+        getRedirectResult
+        } from 'firebase/auth'
+import { useRouter, useRoute } from 'vue-router'
+import { useAuthState } from '@/modules/firebase'
 export default {
-  components: {
-    LockClosedIcon,
+  setup() {
+    const auth = getAuth()
+    const router = useRouter()
+    const route = useRoute()
+    const provider = new GoogleAuthProvider()
+    const message = ref(null);
+    const { user } = useAuthState()
+    const fromRoute = route.query.from ? route.query.from : '/'
+    
+   const redirectURI = `${window.location.host ? window.location.host: ''}${fromRoute}`
+   
+    provider.setCustomParameters({
+      'redirect_uri': redirectURI
+    });
+    const handleSubmit = e => {
+      const { email, password } = e.target.elements
+      signInWithEmailAndPassword(auth, email.value, password.value).then(uc => {
+         router.push(fromRoute)
+      })
+      .catch((error) => {
+        message.value = error.message;
+      })
+    };
+     
+    const googleSignIn = () => {
+      signInWithRedirect(auth, provider)
+    }
+    
+       
+    return { handleSubmit, googleSignIn, user, message}
   },
-  setup () {
-    const email = ref('')
-    const password = ref('')
-    const message = ref(false)
-    const router = useRouter() 
-    const route = useRoute();
-    const { auth, firebase } = useFirebase()
-    console.log(route.params.returnPath);
-    const login = () => {
-      console.log('login')
-    }
-
-    return {
-      login,
-      email,
-      password,
-      message,
-      firebase,
-      useFirebase
-    }
-  }
-}
+};
 </script>

@@ -1,26 +1,28 @@
 <template>
   <div class="h-full w-full flex flex-col flex-nowrap flex-grow">
+    <SkeletonLoader v-if="loading" />
     <header class="bg-indigo-900 shadow">
      <PageHeader />
     </header>
     <div class="flex-grow flex flex-col">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import { useAuth } from '@/stores/firebase/'
+import { useAuthState } from '@/modules/firebase'
 import PageHeader from '@/components/PageHeader.vue'
+import SkeletonLoader from '@/components/SkeletonLoader.vue'
 export default {
- components: { PageHeader },
+ components: { PageHeader, SkeletonLoader },
   setup() {
-    const { uid, signInWithGoogle, signOut, user } = useAuth()
+    const {user, error, loading, isAuthenicated } = useAuthState()
     return {
-      signInWithGoogle,
-      signOut,
-      uid,
-      user
+      user,
+      error,
+      isAuthenicated,
+      loading
     }
   },
 }
