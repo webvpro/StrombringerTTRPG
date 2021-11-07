@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
 import { getAuth, onAuthStateChanged, getRedirectResult } from "firebase/auth";
 import { reactive, computed, onMounted, onUnmounted, toRefs } from 'vue'
 import firebaseConfig from '../../firebase.config'
@@ -12,7 +13,7 @@ export const state = reactive({
 
 
 export const firebaseApp = initializeApp(firebaseConfig.config);
-
+export const db = getFirestore()
 
 export const getUserState = () => {
   const auth = getAuth()
@@ -49,5 +50,7 @@ export const useAuthState = () => {
 
   return { ...toRefs(state), isAuthenticated }
 }
+
+
 
 

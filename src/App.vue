@@ -2,7 +2,7 @@
   <div class="h-full w-full flex flex-col flex-nowrap flex-grow">
     <SkeletonLoader v-if="loading" />
     <header class="bg-indigo-900 shadow">
-     <PageHeader />
+      <PageHeader />
     </header>
     <div class="flex-grow flex flex-col">
       <router-view />
@@ -19,10 +19,10 @@ export default {
   setup() {
     const {user, error, loading, isAuthenicated } = useAuthState()
     return {
-      user,
-      error,
-      isAuthenicated,
-      loading
+     user,
+     error,
+     isAuthenicated,
+     loading
     }
   },
 }

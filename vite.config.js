@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   server: {
+    port: 3033,
     open: true,
   },
 })

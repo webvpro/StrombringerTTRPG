@@ -4,20 +4,16 @@ import { getUserState } from '@/modules/firebase'
 /** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
   { path: '/', component:  () => import('../views/Home.vue'), meta: { title: 'Home' } },
-  { path: '/overlay', component: () => import('@/views/OverLay.vue'), meta: { title: 'Overlays', secure: true } },
-  //{ path: '/play', component: () => import('@/views/Profile.vue'), meta: { title: 'Play', secure: true } },
+  //{ path: '/overlay', component: () => import('@/views/OverLay.vue'), meta: { title: 'Overlays', secure: true } },
+  { path: '/games', component: () => import('@/views/Games.vue'), meta: { title: 'Games', secure: true } },
   { path: '/profile', component: () => import('@/views/Profile.vue'), meta: { title: 'Profile', secure: true } },
   { path: '/signup', component: () => import('@/components/auth/Signup.vue'), meta: { title: 'Sign Up' } },
   {
     path: '/about',
     meta: { title: 'About' },
     component: () => import('@/views/About.vue'),
-    // example of route level code-splitting
-    // this generates a separate chunk (About.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // component: () => import('./views/About.vue')
   },
-   { name: 'login', path: '/login',  component: () => import('@/components/auth/Login.vue'), meta: { title: 'Sign In' }  },
+  { name: 'login', path: '/login',  component: () => import('@/components/auth/Login.vue'), meta: { title: 'Sign In' }  },
   { path: '/:path(.*)', component: () => import('@/views/NotFound.vue'), meta: { title: 'Not Found' }  },
 ];
 
