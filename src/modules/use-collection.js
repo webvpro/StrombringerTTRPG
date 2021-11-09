@@ -24,7 +24,6 @@ import {
     let state = reactive({
       // error if one happens
       collectionData: [],
-      // if the query is loading or ot
       error: null,
       loading: true
     });

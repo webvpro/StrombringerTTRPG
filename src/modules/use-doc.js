@@ -1,12 +1,14 @@
-import { toRefs, reactive, onMounted } from "@vue/composition-api";
+import { toRefs, reactive, onMounted } from "vue";
 import { db } from "@/modules/firebase"
 import { 
   collection,
+  getDoc,
   doc,
   setDoc,
   Timestamp
 
 } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 
 /**
@@ -25,6 +27,7 @@ export default function(collectionName, queryOptions) {
     // if the query is loading or ot
     loading: false
   });
+ 
 
 
   /**
@@ -38,71 +41,40 @@ export default function(collectionName, queryOptions) {
       (queryOptions.onMount && getDocument(queryOptions.documentId));
   });
 
-  const deleteDocument = _documentId => {
+  const deleteDocument = async _documentId => {
     state.loading = true;
     state.error = null;
-    db.collection(collectionName)
-      .doc(_documentId)
-      .delete()
-      .then(() => {
-        console.log("Document successfully deleted!");
-        state.error = null;
-        state.documentData = null;
-      })
-      .catch(error => {
-        console.error("Error removing document: ", error);
-        state.error = error;
-        state.documentData = null;
-      })
-      .finally(() => {
-        state.loading = false;
-      });
+    await deleteDoc(doc(db, collectionName, _documentId));
   };
 
-  const createDocument = async  _documentData => {
+  const setDocument = async  _documentData => {
     state.loading = true;
     state.error = null;
-    docRef= doc(db, collectionName)
-    try {
-      await setDoc(docRef,{ 
-        ..._documentData,
-        createdOn: Timestamp.now()
-      })
-    } catch (error) {
-        state.error = error
-        //console.log(error);
-      }
-    };
-     
+    let docRef = null
+    if (_documentData.id) {
+      // update existing
+      let docRefArray = []
+      docRefArray.push(db)
+      docRefArray.push(collectionName)
+      docRefArray.push(_documentData.id)
+      delete _documentData.id
+      docRef = doc(...docRefArray)
+    } else {
+      //create new
+      console.log(collectionName)
+      docRef = doc(collection(db, collectionName))
+    }
+
+    await setDoc(docRef,{ 
+      ..._documentData,
+      createdOn: Timestamp.now()
+    }) 
+    
+    
+    state.loading = false; 
   };
 
-  const updateDocument = _documentData => {
-    state.loading = true;
-    state.error = null;
-
-    let data = { ..._documentData };
-    delete data[id];
-
-    db.collection(collectionName)
-      .doc(_documentData.id)
-      .update({
-        ...data,
-        updatedOn: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        state.error = null;
-        state.documentData = null;
-      })
-      .catch(function(error) {
-        // The document probably doesn't exist.
-        console.error("Error updating document: ", error);
-        state.error = error;
-        state.documentData = null;
-      })
-      .finally(() => {
-        state.loading = false;
-      });
-  };
+  
 
   /**
    *
@@ -110,39 +82,24 @@ export default function(collectionName, queryOptions) {
    * @param { boolean | undefined } queryOptions.onMounted
    * @param { string | undefined } queryOptions.documentId
    */
-  const getDocument = documentId => {
+  const getDocument = async documentId => {
     state.loading = true;
     state.error = null;
-
-    db.collection(collectionName)
-      .doc(documentId)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          console.log("Document data:", doc.data());
-          state.documentData = { id: doc.id, ...doc.data() };
-          state.error = null;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!: " + documentId);
-          state.documentData(null);
-          state.error = null;
-        }
-      })
-      .catch(error => {
-        console.log("Error getDocuent: ", error);
-        state.error = error;
-      })
-      .finally(() => {
-        state.loading = false;
-      });
+    const docRef = doc(db, collectionName, _documentId)
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      state.documentData = docSnap.data()
+    } else {
+      state.documentData = {}
+      console.log("No such document!");
+    }
+     
   };
 
   return {
     ...toRefs(state),
-    getDocument: getDocument,
-    createDocument,
-    updateDocument,
-    deleteDocument
+    'getDocument': getDocument,
+    'setDocument': setDocument,
+    'deleteDocument': deleteDocument,
   };
 }
