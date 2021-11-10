@@ -19,56 +19,39 @@
         </div>
       </div>      
     </div>
-    <div class="max-w-screen-xl px-4 py-12 mx-36 sm:px-6 lg:py-16 lg:px-8">
+    <div class="mx-16 lg:mx-36">
       <h3 class="max-w-screen-2xl text-lg leading-6 font-medium text-gray-900">
           Games ({{collectionData.length}})
           <button @click.prevent="showForm()" type="button" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <PlusSmIconOutline class="h-6 w-6" aria-hidden="true" />
         </button>
       </h3>
-      <dl class="grid grid-cols-1 gap-2 lg:grid-cols-3">
-        <div v-for="item in games" :key="item.id" class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-            <div class="w-full flex items-center justify-between p-6 space-x-6">
-              <div class="flex-1 truncate">
-                <div class="flex items-center space-x-3">
-                  <h3 class="text-gray-900 text-sm font-medium truncate">{{ item.name }}</h3>
-                  <span class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">{{ item.id }}</span>
-                </div>
-                <p class="mt-1 text-gray-500 text-sm truncate">{{ item.description }}</p>
-              </div>
-              <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="game.imageUrl" alt="" />
+      <ul role="list" class="mt-3 grid grid-cols-1 gap-2 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <li v-for="item in games" :key="item.id" class="col-span-1 flex shadow-sm rounded-md">
+            <div class="bg-indigo-900 flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md">
+               <v-icon name="gi-winged-sword" :scale="3" alt="" class="text-yellow-500" />
             </div>
-            <div>
-              <div class="-mt-px flex divide-x divide-gray-200">
-                <div class="w-0 flex-1 flex">
-                  <a href="#" class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
-                    <PlayIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
-                    <span class="ml-3">Play</span>
-                  </a>
-                </div>
-                <div class="-ml-px w-0 flex-1 flex">
-                  <a href="#" @click.prevent="showForm(item.id)" class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
-                    <CogIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
-                    <span class="ml-3">Update</span>
-                  </a>
-                </div>
-                <div class="-ml-px w-0 flex-1 flex">
-                  <a href="#" @click.prevent="showForm(item.id)" class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
-                    <ClipboardCopyIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
-                    <span class="ml-3">Invite</span>
-                  </a>
-                </div>
+            <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md truncate">
+              <div class="flex-1 px-4 py-2 text-sm truncate">
+                <a href="#" class="text-gray-900 font-medium hover:text-gray-600">{{ item.name }}</a>
+                <p class="text-gray-500">{{item.description}}</p>
+              </div>
+              <div class="flex-grow-1 pr-2">
+                <button @click="showForm(item.id)" type="button" class="w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full bg-transparent hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <span class="sr-only">Open options</span>
+                  <DotsVerticalIcon class="w-5 h-5" aria-hidden="true" />
+                </button>
               </div>
             </div>
-        </div>
-      </dl>
+          </li>
+        </ul>
   </div>
   <GamePanelForm v-if="openForm" />
 </template>
 <script>
 import { toRefs, reactive, onMounted, provide, computed } from 'vue'
 import { PlusSmIcon as PlusSmIconOutline } from '@heroicons/vue/outline'
-import { PlayIcon, CogIcon, ClipboardCopyIcon } from '@heroicons/vue/solid'
+import { PlayIcon, CogIcon, ClipboardCopyIcon, DotsVerticalIcon } from '@heroicons/vue/solid'
 import { useAuthState } from '@/modules/firebase'
 import useGameCollection from '@/modules/use-collection'
 import useGameDoc from '@/modules/use-doc'
@@ -80,7 +63,8 @@ export default {
     PlusSmIconOutline,
     PlayIcon,
     CogIcon,
-    ClipboardCopyIcon
+    ClipboardCopyIcon,
+    DotsVerticalIcon
   },
 
   setup() {

@@ -7,7 +7,7 @@
         <div class="fixed inset-y-0 pl-16 max-w-full right-0 flex">
           <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
             <div class="w-screen max-w-md">
-              <form class="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl">
+              <form @submit="saveForm" class="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl">
                 <div class="flex-1 h-0 overflow-y-auto">
                   <div class="py-6 px-4 bg-indigo-700 sm:px-6">
                     <div class="flex items-center justify-between">
@@ -38,7 +38,8 @@
                             Game name
                           </label>
                           <div class="mt-1">
-                            <input type="text" v-model="form.name" name="name" id="project-name" max="133" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                            <input v-model="name" type="text" name="name" max="133" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                            <p v-if="nameError" class="mt-2 text-sm text-red-600" id="email-error">{{nameError}}.</p>
                           </div>
                         </div>
                         <div>
@@ -141,7 +142,7 @@
                   <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="closeForm">
                     Cancel
                   </button>
-                  <button type="submit" @click.prevent="saveForm(form)" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button type="submit" :disabled="isSubmitting" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Save
                   </button>
                 </div>
@@ -156,6 +157,8 @@
 
 <script>
 import { reactive, inject, toRefs, computed } from 'vue'
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XIcon } from '@heroicons/vue/outline'
 import { LinkIcon, PlusSmIcon, QuestionMarkCircleIcon } from '@heroicons/vue/solid'
@@ -212,7 +215,8 @@ export default {
   },
   setup() {
     const state = reactive({
-      form: {}
+      form: {},
+      errors:{}
     })
 
     const openForm = inject('openForm', false)
@@ -220,17 +224,43 @@ export default {
     const game = inject('game',{})
     const saveDocuemnt = inject('saveDocument')
     state.form = computed(() => game)
-
-    const saveForm = async (form) => {
-      saveDocuemnt({...form})
-    }
     
+    //form validation scheme
+    const schema = computed(() => {
+      return yup.object({
+        name: yup.string().required().min(6),
+      });
+    });
+
+    const { 
+            handleSubmit,
+            isSubmitting,
+    } = useForm({
+      initialValues: state.form,
+      validationSchema: schema,
+    });
+    
+    const { value: name, errorMessage: nameError } = useField('name');
+    
+    function onInvalidSubmit({ values, errors, results }) {
+      console.log(values); // current form values
+      console.log(errors); // a map of field names and their first error message
+      console.log(results); // a detailed map of field names and their validation results
+    }
+
+    const saveForm = handleSubmit(values => {
+      saveDocuemnt(values)
+    },onInvalidSubmit);
+
     return {
       team,
       openForm,
       game,
       closeForm,
       saveForm,
+      isSubmitting,
+      name,
+      nameError,
       ...toRefs(state)
     }
   },
