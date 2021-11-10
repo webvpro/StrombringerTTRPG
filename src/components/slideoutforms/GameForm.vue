@@ -47,7 +47,7 @@
                             Description
                           </label>
                           <div class="mt-1">
-                            <textarea id="description" v-model="form.description" name="description" rows="4" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md" />
+                            <textarea v-model="description" id="description" name="description" rows="4" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md" />
                           </div>
                         </div>
                         <div>
@@ -80,7 +80,7 @@
                                   Public access
                                 </label>
                                 <p id="privacy-public-description" class="text-gray-500">
-                                  Everyone with the link will see this project.
+                                  Everyone will see this game.
                                 </p>
                               </div>
                             </div>
@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="pl-7 text-sm">
                                   <label for="privacy-private-to-project" class="font-medium text-gray-900">
-                                    Private to project members
+                                    Private to players
                                   </label>
                                   <p id="privacy-private-to-project-description" class="text-gray-500">
                                     Only members of this project would be able to access.
@@ -215,7 +215,6 @@ export default {
   },
   setup() {
     const state = reactive({
-      form: {},
       errors:{}
     })
 
@@ -223,24 +222,23 @@ export default {
     const closeForm = inject('hideForm')
     const game = inject('game',{})
     const saveDocuemnt = inject('saveDocument')
-    state.form = computed(() => game)
-    
+     
     //form validation scheme
-    const schema = computed(() => {
-      return yup.object({
-        name: yup.string().required().min(6),
-      });
+    const schema = yup.object({
+      name: yup.string().required().min(6),
     });
+    
 
     const { 
             handleSubmit,
             isSubmitting,
     } = useForm({
-      initialValues: state.form,
       validationSchema: schema,
+      initialValues: game
     });
     
     const { value: name, errorMessage: nameError } = useField('name');
+    const { value: description } = useField('description');
     
     function onInvalidSubmit({ values, errors, results }) {
       console.log(values); // current form values
@@ -249,18 +247,20 @@ export default {
     }
 
     const saveForm = handleSubmit(values => {
+      console.log(values);
       saveDocuemnt(values)
     },onInvalidSubmit);
 
     return {
       team,
-      openForm,
       game,
+      openForm,
       closeForm,
       saveForm,
       isSubmitting,
       name,
       nameError,
+      description,
       ...toRefs(state)
     }
   },
