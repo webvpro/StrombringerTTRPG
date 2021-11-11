@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { getUserState } from '@/modules/firebase'
+import { getUserState, getAuthRedirect } from '@/modules/firebase'
 
 /** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
@@ -25,10 +25,21 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const isSecure = to.matched.some(record => record.meta.secure)
   const isAuth = await getUserState()
-  
+    
+  await getAuthRedirect().then((result)=>{
+    const authRedirectPath = to.query.from ? to.query.from : '/' 
+    if(result && result.user) {
+      console.log(to.query.from)
+      next({ path: authRedirectPath})
+    }  
+    
+  }).catch((error) => {
+    console.log(error)
+  })
+
   if (isSecure && !isAuth) {
-    const loginpath = window.location.pathname;
-    next({ name: 'login', query: { from: loginpath }})
+    const redirectPath = to.path
+    next({ name: 'login', query: { from: redirectPath }})
   } else {
     next()
   }  

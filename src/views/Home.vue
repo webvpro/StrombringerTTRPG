@@ -8,7 +8,7 @@
         >
           
           <br />
-          <span class="text-indigo-600">Stormbringer.poc VUE3+Vite+Tailwind+Firebase</span>
+          <span class="text-indigo-600">Stormbringer.poc</span>
         </h2>
         <div class="flex mt-8 lg:flex-shrink-0 lg:mt-0">
           <div class="inline-flex rounded-md shadow">

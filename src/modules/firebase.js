@@ -24,6 +24,11 @@ export const getUserState = () => {
   )
 }
 
+export const getAuthRedirect = () => {
+  const auth = getAuth()
+  return getRedirectResult(auth)
+}
+
 export const useAuthState = () => {
   state.user = null
   state.error = false
