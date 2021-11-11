@@ -25,8 +25,10 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const isSecure = to.matched.some(record => record.meta.secure)
   const isAuth = await getUserState()
-    
+  console.log(to.meta.title)
+  
   await getAuthRedirect().then((result)=>{
+    document.title = from.meta.title ? from.meta.title : 'Stormbringer.io POC'
     const authRedirectPath = to.query.from ? to.query.from : '/' 
     if(result && result.user) {
       console.log(to.query.from)
@@ -39,8 +41,10 @@ router.beforeEach(async (to, from, next) => {
 
   if (isSecure && !isAuth) {
     const redirectPath = to.path
+    document.title = to.meta.title ? to.meta.title : 'Stormbringer.io POC'
     next({ name: 'login', query: { from: redirectPath }})
   } else {
+    document.title = to.meta.title ? to.meta.title : 'Stormbringer.io POC'
     next()
   }  
 })
