@@ -1,15 +1,15 @@
 <script>
-import { defineComponent, ref } from 'vue'
+import { ref } from 'vue'
 import { Switch } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-import OhVueIcon from "oh-vue-icons/dist/v3/icon.es";
-import  { GiMagicPortal, GiCapeArmor  } from "oh-vue-icons/icons";
+
 //import DemoProfileImg from '@/components/DemoProfileImg.vue'
-OhVueIcon.add(GiMagicPortal, GiCapeArmor );
+
 
 
 export default {
-    components: { Switch,   "v-icon": OhVueIcon  },
+    components: {
+      Switch,
+    },
 
     setup() {
       const enabled = ref(false)

@@ -6,16 +6,21 @@
             <v-icon class="rounded-full bg-purple-600 border-2 p-1" name="gi-magic-portal" label="TTP Overlays" scale="5" fill="#fff" />
         </router-link>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+          Create a new free account
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or
-          <a href="/signup" class="font-medium text-purple-600 hover:text-purple-500">
-            Create a new free account
+          <a href="/login" class="font-medium text-purple-600 hover:text-purple-500">
+            Sign with my account
           </a>
         </p>
       </div>
-      <form class="mt-8 space-y-6" @submit.prevent="login">
+      <div>
+        <button class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="googleSignIn">
+          Login with Google
+        </button>
+      </div>
+      <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <input type="hidden" name="remember" value="true" />
         <span v-if="message" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
               {{message}}
@@ -30,28 +35,12 @@
             <input id="password" name="password" type="password" autocomplete="current-password" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password" v-model='password'/>
           </div>
         </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded" />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              Remember me
-            </label>
-          </div>
-
-          <div class="text-sm">
-            <a href="#" class="font-medium text-purple-600 hover:text-purple-500">
-              Forgot your password?
-            </a>
-          </div>
-        </div>
-
         <div>
           <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <LockClosedIcon class="h-5 w-5 text-purple-500 group-hover:text-purple-400" aria-hidden="true" />
             </span>
-            Sign in
+            Register
           </button>
         </div>
       </form>
@@ -61,34 +50,39 @@
 
 <script>
 import { ref } from 'vue'
-import useFirebase from '@/stores/firebase'
- 
-import { useRouter, useRoute } from 'vue-router' // import router
+import { 
+        getAuth,
+        createUserWithEmailAndPassword,
+        GoogleAuthProvider 
+        } from 'firebase/auth'
+import { useRouter } from 'vue-router'
 import { LockClosedIcon } from '@heroicons/vue/solid'
 export default {
-  components: {
+   components: {
     LockClosedIcon,
   },
-  setup () {
-    const email = ref('')
-    const password = ref('')
-    const message = ref(false)
-    const router = useRouter() 
-    const route = useRoute();
-    const { auth, firebase } = useFirebase()
-    console.log(route.params.returnPath);
-    const login = () => {
-      console.log('login')
-    }
-
-    return {
-      login,
-      email,
-      password,
-      message,
-      firebase,
-      useFirebase
-    }
-  }
-}
+  setup() {
+    const auth = getAuth()
+    const router = useRouter()
+    const provider = new GoogleAuthProvider()
+    const message = ref(null);
+    const handleSubmit = async e => {
+      const { email, password } = e.target.elements
+      message.value = null
+      try {
+        await createUserWithEmailAndPassword(auth, email.value, password.value)
+        router.push('/')
+      } catch (e) {
+        message.value = e.message
+      }
+    };
+     
+    const googleSignIn = () => {
+      signInWithRedirect(auth, provider).then(
+        router.push('/')
+      )
+    }  
+    return { handleSubmit, googleSignIn, message}
+  },
+};
 </script>
