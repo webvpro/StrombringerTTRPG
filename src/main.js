@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import * as GiIcons from "oh-vue-icons/icons/gi";
+import * as FaIcons from "oh-vue-icons/icons/fa";
 
 
 import App from './App.vue'
@@ -10,7 +11,8 @@ import router from './router'
 import './tailwind.css'
 
 const Gi = Object.values({ ...GiIcons });
-addIcons(...Gi);
+const Fa = Object.values({ ...FaIcons });
+addIcons(...Gi, ...Fa);
 
 const app = createApp(App)
 app.component("v-icon", OhVueIcon);
