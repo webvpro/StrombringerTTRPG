@@ -29,12 +29,12 @@
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/line-clamp": "^0.2.1",
     "@tailwindcss/typography": "^0.4.1",
-    "@types/tailwindcss": "^2.2.1",
+    "@types/tailwindcss": "^3.0.11",
     "@vitejs/plugin-vue": "^1.2.5",
     "@vue/compiler-sfc": "^3.2.21",
     "autoprefixer": "^10.3.1",
     "npm-run-all": "^4.1.5",
-    "tailwindcss": "^2.2.4",
+    "tailwindcss": "^3.1.4",
     "vite": "^2.4.3",
     "vue-friendly-iframe": "^0.20.0"
   }
