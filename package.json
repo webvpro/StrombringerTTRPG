@@ -19,7 +19,7 @@
     "vue": "^3.2.21",
     "vue-iframes": "0.0.16",
     "vue-router": "^4.0.10",
-    "xstate": "^4.23.0",
+    "xstate": "^4.35.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
